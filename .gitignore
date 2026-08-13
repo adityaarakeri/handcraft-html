@@ -1,0 +1,16 @@
+# packaged skill archives
+*.skill
+*.zip
+
+# os cruft
+.DS_Store
+Thumbs.db
+
+# editor
+.vscode/
+.idea/
+*.swp
+
+# local scratch
+scratch/
+tmp/
