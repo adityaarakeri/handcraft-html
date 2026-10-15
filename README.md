@@ -15,7 +15,7 @@ This skill is the opposite approach. Instead of correcting those patterns after 
 ## What you get
 
 - **Nine page types**, each with its own structure, components, and traps. A runbook and an API reference do not share a skeleton.
-- **Six named themes**, each with hand-tuned light and dark values. All 36 text and background pairings clear WCAG AA at 4.5:1.
+- **Nine named choices**: six color themes with hand-tuned light and dark values, plus Minimal, Notebook, and Glass docs style themes that reuse those palettes. The six palettes' tested text and background pairings clear WCAG AA at 4.5:1.
 - **A technical floor on every build**: theme toggle with no flash on load, mobile-first CSS with no horizontal scroll at 360px, 44px touch targets, semantic landmarks, visible focus styles, reduced-motion support.
 - **Copy rules**: no em-dashes anywhere, no zombie marketing words, mandatory humanization pass before delivery.
 - **No broken output**: no hotlinked images that 404, no forms that silently swallow submissions.
@@ -82,7 +82,7 @@ This loses on-demand loading, so consider trimming to `SKILL.md` plus `ai-tells.
 
 ## Usage
 
-Ask for a page. The skill asks two questions (page type and theme), then builds.
+Ask for a page. The skill asks for page type and theme, then builds. Documentation requests can choose a color theme or a docs style theme directly.
 
 ```
 Build a docs site for our CLI.
@@ -126,8 +126,11 @@ Keep all copy and working links. Terminal theme.
 | Forest | Warm off-white and deep green. Quiet, library-like. |
 | Plum | Soft grey and deep aubergine. Distinct without being loud. |
 | Mono | Paper white, black, one red. Swiss and colorless. |
+| Minimal | Sparse, content-first docs layout with the Mono palette. |
+| Notebook | Compact docs layout with the Slate palette. |
+| Glass | Floating translucent docs navigation with the Slate palette. |
 
-Supplying your own brand colors overrides theme selection entirely.
+Minimal, Notebook, and Glass are for documentation page types. Supplying your own brand colors overrides the chosen palette; a named docs style still supplies its layout.
 
 ### Other options
 
@@ -147,8 +150,8 @@ handcraft-html/
   SKILL.md              the workflow, six steps
   references/
     page-types.md       structure and traps per page type
-    themes.md           six presets, tested hex values, both modes
-    docs-style.md       layout and components for documentation types
+    themes.md           six color presets, tested hex values, both modes
+    docs-style.md       four docs layouts and components for documentation types
     ai-tells.md         banned patterns and the final checklist
 examples/
   handcraft-html-field-guide.html   a page built by the skill
