@@ -3,7 +3,7 @@ name: handcraft-html
 description: >
   Build HTML pages that look and read like a real person made them, not an AI. Tuned for technical
   documentation, API references, runbooks, code docs, internal wikis, and simple portfolios, with
-  six named light/dark themes the user picks from. Use whenever the user asks for docs, a reference
+  six color themes and three documentation style themes with light/dark mode. Use whenever the user asks for docs, a reference
   site, a runbook, a README as a page, a portfolio, a landing page, or any HTML/CSS front-end work,
   even if they don't say "make it not look AI generated". Also trigger on "build me a site",
   "document this API", "turn this into a docs page", or "this site looks too AI". Every page ships
@@ -24,9 +24,9 @@ Work through the steps in order. Never skip Step 1 or the self-check in Step 6.
 
 Two things must be settled before any design work: **page type** and **theme**. Both are the user's call.
 
-If the user already stated one or both ("an API reference, Anthropic style"), take it and don't re-ask. If they supplied their own brand colors, that replaces the theme choice entirely.
+If the user already stated one or both ("an API reference, Notebook theme"), take it and don't re-ask. User-supplied brand colors replace the preset palette; a named docs style theme still determines layout.
 
-Otherwise, ask for both in one turn. If an interactive option-picker tool is available, use it: one question for page type, one for theme, presented together so the user answers once. Otherwise ask in plain text with both lists.
+Otherwise, ask for both in one turn. If an interactive option-picker tool is available, use it: one question for page type, one for theme, presented together so the user answers once. Otherwise ask in plain text with both lists. Offer themes 7 through 9 only when the page type is documentation; if the page type is still unknown, label them as docs-only choices.
 
 **Page type** (from `references/page-types.md`):
 
@@ -40,7 +40,7 @@ Otherwise, ask for both in one turn. If an interactive option-picker tool is ava
 8. Personal / resume site
 9. Something else
 
-**Theme** (from `references/themes.md`):
+**Theme** (from `references/themes.md` and `references/docs-style.md`):
 
 1. Anthropic, warm paper and terracotta, editorial and calm
 2. Slate, cool grey and ink blue, neutral and institutional
@@ -48,21 +48,26 @@ Otherwise, ask for both in one turn. If an interactive option-picker tool is ava
 4. Forest, warm off-white and deep green, quiet and library-like
 5. Plum, soft grey and deep aubergine, distinct without being loud
 6. Mono, paper white and black with one red, Swiss and colorless
+7. Minimal, sparse navigation and content-first docs, using the Mono palette
+8. Notebook, compact navigation for dense docs, using the Slate palette
+9. Glass, restrained floating translucent docs navigation, using the Slate palette
 
-Suggest a default alongside the list based on the page type (Terminal for runbooks, Mono for portfolios, Anthropic or Slate for product docs and API references), so the user can accept in one word.
+Minimal, Notebook, and Glass are docs style themes for page types 1 through 5. Choosing one selects its layout and default color palette in one step. A user-supplied brand palette still wins. The six color themes above retain the Classic docs layout unless the user asks for a different layout.
 
-Then read the relevant section of `references/page-types.md`, plus `references/docs-style.md` if it's a documentation-family type, plus the chosen preset in `references/themes.md`.
+Suggest a default alongside the list based on the page type (Terminal for runbooks, Mono for portfolios, Anthropic or Slate for product docs and API references, Notebook for dense API references or wikis, Minimal for short guides), so the user can accept in one word.
+
+Then read the relevant section of `references/page-types.md`, plus `references/docs-style.md` if it's a documentation-family type, plus the selected palette in `references/themes.md` unless the user supplied brand colors.
 
 Also pin down the subject: what it actually is, who reads it, and the one job the page has. If the user left that vague, make a concrete choice and say what you chose. Generic subject in, generic page out.
 
 ## Step 2: Never invent a palette when a preset fits
 
-The six presets exist because freehand palettes drift. Left to improvise while avoiding the banned stock looks, models reliably land on the same two substitutes: a green cast or a navy cast. Avoiding one default that way just manufactures another.
+The six color presets exist because freehand palettes drift. The three docs style themes reuse those tested palettes. Left to improvise while avoiding the banned stock looks, models reliably land on the same two substitutes: a green cast or a navy cast. Avoiding one default that way just manufactures another.
 
 So:
 
-- **User's brand beats everything.** Provided colors, fonts, or a logo override every rule here, even if they match a stock AI look.
-- **A named theme beats improvisation.** If a preset was chosen, use its values verbatim. Don't adjust them mid-build, don't blend two, don't "warm it up a little".
+- **User's brand controls appearance.** Provided colors, fonts, or a logo override the preset palette and type choices, even if they match a stock AI look. A named docs style can still control layout.
+- **A named theme beats improvisation.** If a color preset was chosen, use its values verbatim. For Minimal, Notebook, or Glass, use the paired palette in `references/docs-style.md` verbatim. Don't adjust values mid-build, don't blend two palettes, don't "warm it up a little".
 - **Custom palettes only on request.** When the user genuinely wants something outside the six, build it from the subject's real world (a foundry has rust, slag, firebrick), then state it in one line before writing code: "Palette: warm slate and rust, from the foundry setting." If your custom palette is green or navy, justify it from the subject in that same line or pick differently.
 
 ## Step 3: Design the rest
@@ -70,7 +75,7 @@ So:
 Read `references/ai-tells.md` before designing. It lists the visual patterns that read as machine-made. With the palette settled by Step 2, plan the remaining axes:
 
 - **Type**: a characterful display face with restraint, a readable body face, optionally a utility face for labels or code. Never one font doing all three jobs. The chosen theme suggests a pairing; follow it.
-- **Layout**: one sentence describing the concept. Documentation types have a prescribed skeleton in `docs-style.md`; follow it rather than inventing.
+- **Layout**: one sentence describing the concept. Documentation types use the Classic skeleton or the selected docs style theme in `docs-style.md`; follow it rather than inventing.
 - **Signature**: one memorable element. One. Spend boldness there, keep everything else quiet.
 
 Then critique the plan once: anything that's what you'd produce for any similar prompt is a default, not a decision.
@@ -147,6 +152,6 @@ Run the checklist at the end of `references/ai-tells.md` against your own output
 ## Reference files
 
 - `references/page-types.md`: structure, components, and traps per page type. Read the relevant section in Step 1.
-- `references/themes.md`: the six presets with tested hex values for both modes. Read the chosen preset in Step 1.
-- `references/docs-style.md`: layout and component playbook for all documentation-family types. Mandatory for types 1 through 5.
+- `references/themes.md`: six color presets with tested hex values for both modes. Read the chosen palette in Step 1.
+- `references/docs-style.md`: Classic, Minimal, Notebook, and Glass docs layouts plus the component playbook. Mandatory for types 1 through 5.
 - `references/ai-tells.md`: patterns that read as machine-made, plus the final checklist. Read in Step 3 and again in Step 6.

@@ -10,7 +10,7 @@ These are the patterns people have learned to associate with AI-built sites. Non
 
 **The three-card feature grid.** Three equal cards, each with a rounded icon in a tinted circle, a bold short title, and two lines of gray text. If the content genuinely has three parallel features, present them, but find a shape that isn't this exact component.
 
-**Glassmorphism.** Frosted translucent cards floating over blurry colorful blobs.
+**Glassmorphism.** Frosted translucent cards floating over blurry colorful blobs. The named Glass docs theme uses restrained translucency on navigation surfaces only; its article and content components remain opaque.
 
 **Uniform 12 to 16px border-radius on everything.** Radius should be a considered token, and can be zero.
 
@@ -47,7 +47,7 @@ These are the patterns people have learned to associate with AI-built sites. Non
 
 ## Final self-check (run before delivering, every time)
 
-- [ ] No purple/blue gradient, no glassmorphism, no icon-circle three-card grid
+- [ ] No purple/blue gradient or icon-circle three-card grid; no glassmorphism except restrained navigation surfaces when the named Glass docs theme was chosen
 - [ ] Palette is either the chosen named preset (values verbatim) or the user's own brand colors
 - [ ] If a custom palette was used, it was stated in one line first and justified by the subject
 - [ ] No accidental green or navy cast: those are the usual drift landing spots when avoiding banned looks

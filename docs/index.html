@@ -11,6 +11,16 @@
   try { stored = localStorage.getItem('hh-theme'); } catch (e) { /* storage blocked, fall back to system */ }
   var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   document.documentElement.dataset.theme = stored || (prefersDark ? 'dark' : 'light');
+  var docStyle = null;
+  try { docStyle = localStorage.getItem('hh-doc-style'); } catch (e) { /* storage blocked */ }
+  document.documentElement.dataset.docStyle = ['classic', 'minimal', 'notebook', 'glass'].includes(docStyle) ? docStyle : 'classic';
+  var paletteChoice = null;
+  try { paletteChoice = localStorage.getItem('hh-palette'); } catch (e) { /* storage blocked */ }
+  if (!['anthropic', 'slate', 'terminal', 'forest', 'plum', 'mono'].includes(paletteChoice)) paletteChoice = 'auto';
+  document.documentElement.dataset.paletteChoice = paletteChoice;
+  document.documentElement.dataset.palette = paletteChoice === 'auto'
+    ? ({ classic: 'anthropic', minimal: 'mono', notebook: 'slate', glass: 'slate' })[document.documentElement.dataset.docStyle]
+    : paletteChoice;
 })();
 </script>
 <style>
@@ -26,7 +36,7 @@
   --code-bg: #21201C;
   --code-text: #EDEAE2;
   --code-border: #38362E;
-  --tk-cmd: #E5A085;
+  --tk-cmd: #8FB8F0;
   --tk-str: #A8C39A;
   --tk-com: #8A857A;
   --tk-flag: #D9B25F;
@@ -48,12 +58,12 @@
   --muted: #A29C8E;
   --accent: #E08D6D;
   --accent-soft: #3B2A22;
-  --code-bg: #171613;
+  --code-bg: #131311;
   --code-text: #E4E0D6;
-  --code-border: #2C2A24;
-  --tk-cmd: #E5A085;
+  --code-border: #26251F;
+  --tk-cmd: #8FB8F0;
   --tk-str: #A8C39A;
-  --tk-com: #787265;
+  --tk-com: #8A857A;
   --tk-flag: #D9B25F;
   --note: #8FAEC9;
   --note-bg: #232A31;
@@ -63,6 +73,64 @@
   --warn-bg: #322A1C;
   --kbd-bg: #2D2C27;
   --shadow: none;
+}
+
+/* Palette and layout are independent; style defaults resolve in the head script. */
+:root[data-palette="slate"] {
+  --bg: #FBFBFC; --surface: #F2F3F5; --surface-2: #E8EAED;
+  --border: #DCDFE4; --text: #1C1E21; --muted: #666B73;
+  --accent: #2C5A9E; --accent-soft: #E3EAF5; --kbd-bg: #E8EAED;
+  --shadow: none;
+}
+:root[data-palette="slate"][data-theme="dark"] {
+  --bg: #16181C; --surface: #1D2026; --surface-2: #24272E;
+  --border: #31353D; --text: #E4E6EA; --muted: #969CA6;
+  --accent: #7FA9E8; --accent-soft: #1E2634; --kbd-bg: #24272E;
+}
+:root[data-palette="terminal"] {
+  --bg: #FCFBF7; --surface: #F3F1E9; --surface-2: #EAE7DC;
+  --border: #DAD6C7; --text: #1A1917; --muted: #6B6659;
+  --accent: #8A5B00; --accent-soft: #F5E9CE; --kbd-bg: #EAE7DC;
+  --tk-cmd: #E0A93B; --tk-str: #B8C98A; --tk-com: #7C776B; --tk-flag: #D98E3B;
+  --shadow: none;
+}
+:root[data-palette="terminal"][data-theme="dark"] {
+  --bg: #121210; --surface: #191917; --surface-2: #20201D;
+  --border: #2C2C27; --text: #E6E4DC; --muted: #96938A;
+  --accent: #E0A93B; --accent-soft: #2E2616; --kbd-bg: #20201D;
+}
+:root[data-palette="forest"] {
+  --bg: #FAFAF7; --surface: #EFF1EC; --surface-2: #E5E8E0;
+  --border: #D6DBD0; --text: #1B1F1A; --muted: #636B5E;
+  --accent: #2F6844; --accent-soft: #E0EDE4; --kbd-bg: #E5E8E0;
+  --shadow: none;
+}
+:root[data-palette="forest"][data-theme="dark"] {
+  --bg: #151815; --surface: #1C201B; --surface-2: #232823;
+  --border: #2F352E; --text: #E5E8E1; --muted: #949B90;
+  --accent: #7FBF95; --accent-soft: #1E2C22; --kbd-bg: #232823;
+}
+:root[data-palette="plum"] {
+  --bg: #FCFBFC; --surface: #F3F0F3; --surface-2: #EAE5EA;
+  --border: #DDD5DD; --text: #1E1B1E; --muted: #6A626A;
+  --accent: #6D3A76; --accent-soft: #EFE2F1; --kbd-bg: #EAE5EA;
+  --shadow: none;
+}
+:root[data-palette="plum"][data-theme="dark"] {
+  --bg: #18151A; --surface: #1F1B21; --surface-2: #262129;
+  --border: #332C36; --text: #E9E4EA; --muted: #9C939F;
+  --accent: #C297CC; --accent-soft: #2A2130; --kbd-bg: #262129;
+}
+:root[data-palette="mono"] {
+  --bg: #FFFFFF; --surface: #F4F4F4; --surface-2: #EAEAEA;
+  --border: #DBDBDB; --text: #111111; --muted: #5E5E5E;
+  --accent: #C0271B; --accent-soft: #F8E4E2; --kbd-bg: #EAEAEA;
+  --shadow: none;
+}
+:root[data-palette="mono"][data-theme="dark"] {
+  --bg: #0E0E0E; --surface: #161616; --surface-2: #1E1E1E;
+  --border: #2A2A2A; --text: #EDEDED; --muted: #9A9A9A;
+  --accent: #FF7A6B; --accent-soft: #2A1815; --kbd-bg: #1E1E1E;
 }
 
 * { box-sizing: border-box; }
@@ -124,6 +192,13 @@ code, pre, kbd { font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, C
 }
 .icon-btn:hover { background: var(--surface); border-color: var(--border); }
 .icon-btn svg { width: 20px; height: 20px; }
+.style-control { display: flex; align-items: center; gap: 0.4rem; color: var(--muted); font-size: 0.78rem; }
+.style-control select {
+  min-height: 44px; max-width: 8rem; padding: 0 0.55rem;
+  border: 1px solid var(--border); border-radius: 6px;
+  background: var(--surface); color: var(--text); font: inherit; font-size: 0.82rem;
+}
+.palette-control select { max-width: 9rem; }
 #menuBtn { display: none; }
 [data-theme="light"] .moon { display: block; }
 [data-theme="light"] .sun { display: none; }
@@ -168,7 +243,7 @@ main { padding: 2rem 0 4rem; min-width: 0; }
 .crumb b { color: var(--accent); font-weight: 600; }
 main h1 { font-size: clamp(1.9rem, 5vw, 2.6rem); margin: 0 0 0.5rem; }
 .lede { color: var(--muted); font-size: 1.05rem; max-width: 42rem; margin-top: 0; }
-main section { margin-top: 3.2rem; }
+main section { margin-top: 3.2rem; scroll-margin-top: 100px; }
 main h2 {
   font-size: clamp(1.35rem, 3.5vw, 1.65rem);
   padding-bottom: 0.4rem; border-bottom: 1px solid var(--border);
@@ -276,6 +351,25 @@ td { border-bottom: 1px solid var(--border); padding: 0.55rem 0.8rem; vertical-a
 .field dt .cause { font-size: 0.78rem; color: var(--muted); margin-left: 0.5rem; }
 .field dd { margin: 0.45rem 0 0; }
 
+/* ---------- Theme previews ---------- */
+.theme-grid {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem; margin: 1.2rem 0; max-width: 44rem;
+}
+.theme-option {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 0.45rem;
+  padding: 0.85rem; border: 1px solid var(--border); background: var(--surface);
+}
+.theme-option strong { font-size: 0.95rem; }
+.theme-option p { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.preview-btn {
+  min-height: 44px; padding: 0.4rem 0.75rem;
+  border: 1px solid var(--border); border-radius: 5px;
+  background: var(--bg); color: var(--accent); cursor: pointer; font: inherit;
+  font-size: 0.8rem; font-weight: 700;
+}
+.preview-btn:hover, .preview-btn[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+
 /* ---------- TOC ---------- */
 .toc {
   position: sticky; top: 61px;
@@ -323,6 +417,91 @@ footer {
   .scrim.show { opacity: 1; pointer-events: auto; }
   .cards { grid-template-columns: 1fr; }
 }
+
+/* Minimal gives the article room and keeps the navigation quiet. */
+[data-doc-style="minimal"] .layout { grid-template-columns: 180px minmax(0, 1fr); max-width: 1050px; gap: 3rem; }
+[data-doc-style="minimal"] .toc { display: none; }
+[data-doc-style="minimal"] main { max-width: 750px; }
+[data-doc-style="minimal"] .sidebar { border-right: 1px solid var(--border); padding-right: 1rem; }
+[data-doc-style="minimal"] .sidebar .group-label { text-transform: none; letter-spacing: 0; }
+[data-doc-style="minimal"] .cards a { background: var(--bg); border-radius: 0; box-shadow: none; }
+
+/* Notebook packs reference navigation and content more tightly. */
+[data-doc-style="notebook"] .layout { grid-template-columns: 220px minmax(0, 1fr) 170px; max-width: 1360px; gap: 1.5rem; }
+[data-doc-style="notebook"] .sidebar { background: var(--surface); padding: 1rem 0.7rem 2rem; }
+[data-doc-style="notebook"] .sidebar .group { margin-bottom: 0.75rem; }
+[data-doc-style="notebook"] .sidebar a { padding: 0.24rem 0.55rem; }
+[data-doc-style="notebook"] main { padding-top: 1.25rem; }
+[data-doc-style="notebook"] main section { margin-top: 2.2rem; }
+[data-doc-style="notebook"] .cards { gap: 0.55rem; }
+[data-doc-style="notebook"] .cards a { padding: 0.7rem 0.8rem; }
+
+/* Glass floats opaque-fallback navigation; the article always remains opaque. */
+[data-doc-style="glass"] body { background: var(--surface); }
+[data-doc-style="glass"] .topbar {
+  top: 12px; max-width: 1300px; margin: 12px auto 0;
+  border: 1px solid var(--border); border-radius: 14px;
+  background: var(--bg);
+}
+[data-doc-style="glass"] .layout { max-width: 1300px; gap: 1.5rem; }
+[data-doc-style="glass"] .sidebar {
+  top: 88px; height: calc(100vh - 100px); margin-top: 1.25rem;
+  padding: 1.2rem 0.8rem; background: var(--bg);
+  border: 1px solid var(--border); border-radius: 14px;
+}
+[data-doc-style="glass"] main { background: var(--bg); padding: 2rem 1.5rem 4rem; }
+[data-doc-style="glass"] .toc { top: 88px; height: calc(100vh - 100px); }
+@supports (backdrop-filter: blur(12px)) {
+  [data-doc-style="glass"] .topbar,
+  [data-doc-style="glass"] .sidebar {
+    background: color-mix(in srgb, var(--bg) 94%, transparent);
+    backdrop-filter: blur(12px);
+  }
+}
+
+[data-palette="slate"] h1, [data-palette="slate"] h2, [data-palette="slate"] h3,
+[data-palette="mono"] h1, [data-palette="mono"] h2, [data-palette="mono"] h3 {
+  font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+  letter-spacing: -0.035em;
+}
+[data-palette="terminal"] h1, [data-palette="terminal"] h2, [data-palette="terminal"] h3,
+[data-palette="terminal"] .sidebar .group-label,
+[data-palette="terminal"] .toc .toc-label {
+  font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+}
+[data-palette="forest"] body { font-family: "Trebuchet MS", "Segoe UI", sans-serif; }
+[data-palette="plum"] h1, [data-palette="plum"] h2, [data-palette="plum"] h3 {
+  font-family: "Baskerville", "Iowan Old Style", Georgia, serif;
+}
+@media (max-width: 1080px) {
+  [data-doc-style="notebook"] .layout { grid-template-columns: 210px minmax(0, 1fr); }
+  [data-doc-style="glass"] .layout { grid-template-columns: 230px minmax(0, 1fr); }
+}
+@media (max-width: 760px) {
+  .topbar { flex-wrap: wrap; gap: 0.3rem; padding: 0.35rem 0.5rem; }
+  #menuBtn { order: 1; }
+  .brand { order: 2; }
+  #themeToggle { order: 3; margin-left: auto; }
+  .brand { font-size: 0.8rem; }
+  .brand .tag, .style-control span { display: none; }
+  .style-control { flex: 1 1 calc(50% - 0.2rem); margin: 0; }
+  .palette-control { order: 4; }
+  .style-control:not(.palette-control) { order: 5; }
+  .style-control select, .palette-control select { width: 100%; max-width: none; }
+  .theme-grid { grid-template-columns: 1fr; }
+  main section, main h2, main h3 { scroll-margin-top: 125px; }
+  [data-doc-style="minimal"] .layout,
+  [data-doc-style="notebook"] .layout,
+  [data-doc-style="glass"] .layout { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  [data-doc-style="minimal"] .sidebar,
+  [data-doc-style="notebook"] .sidebar,
+  [data-doc-style="glass"] .sidebar {
+    top: 0; height: 100vh; margin: 0; border-radius: 0;
+    padding: 1.2rem 1rem; background: var(--bg); backdrop-filter: none;
+  }
+  [data-doc-style="glass"] .topbar { top: 0; margin: 0; border-radius: 0; }
+  [data-doc-style="glass"] main { padding: 2rem 0 4rem; }
+}
 </style>
 </head>
 <body>
@@ -334,6 +513,25 @@ footer {
   </button>
   <div class="brand"><code>handcraft-html</code><span class="tag">field guide</span></div>
   <div class="search" aria-hidden="true">Search the guide <kbd>Ctrl K</kbd></div>
+  <label class="style-control palette-control" for="paletteSelect"><span>Palette</span>
+    <select id="paletteSelect" aria-label="Color palette">
+      <option value="auto">Style default</option>
+      <option value="anthropic">Anthropic</option>
+      <option value="slate">Slate</option>
+      <option value="terminal">Terminal</option>
+      <option value="forest">Forest</option>
+      <option value="plum">Plum</option>
+      <option value="mono">Mono</option>
+    </select>
+  </label>
+  <label class="style-control" for="docStyle"><span>Docs style</span>
+    <select id="docStyle" aria-label="Docs style">
+      <option value="classic">Classic</option>
+      <option value="minimal">Minimal</option>
+      <option value="notebook">Notebook</option>
+      <option value="glass">Glass</option>
+    </select>
+  </label>
   <button id="themeToggle" class="icon-btn" aria-label="Toggle color theme">
     <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
     <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
@@ -359,6 +557,7 @@ footer {
   </div>
   <div class="group">
     <div class="group-label">Reference</div>
+    <a href="#themes">Themes</a>
     <a href="#options">Options you can pass</a>
     <a href="#debugging">Debugging</a>
   </div>
@@ -490,14 +689,40 @@ I shoot film photography, mostly around the Sunset district.</pre></div>
     </div>
   </section>
 
+  <section id="themes">
+    <h2><a class="anchor" href="#themes">#</a>Themes</h2>
+    <p>Try any color palette here. It changes the colors and type pairing while keeping your selected layout. The docs style control changes the layout; "Style default" pairs Classic with Anthropic, Minimal with Mono, and Notebook or Glass with Slate.</p>
+    <h3>Color palettes</h3>
+    <div class="theme-grid">
+      <div class="theme-option"><strong>Anthropic</strong><p>Warm paper and terracotta, calm and editorial.</p><button class="preview-btn" data-preview-palette="anthropic" type="button">Try Anthropic</button></div>
+      <div class="theme-option"><strong>Slate</strong><p>Cool grey and ink blue for a neutral reference.</p><button class="preview-btn" data-preview-palette="slate" type="button">Try Slate</button></div>
+      <div class="theme-option"><strong>Terminal</strong><p>Paper terminal by day, amber on near-black by night.</p><button class="preview-btn" data-preview-palette="terminal" type="button">Try Terminal</button></div>
+      <div class="theme-option"><strong>Forest</strong><p>Warm off-white and deep green, library-like.</p><button class="preview-btn" data-preview-palette="forest" type="button">Try Forest</button></div>
+      <div class="theme-option"><strong>Plum</strong><p>Soft grey with an aubergine accent.</p><button class="preview-btn" data-preview-palette="plum" type="button">Try Plum</button></div>
+      <div class="theme-option"><strong>Mono</strong><p>Paper white, black, and one red.</p><button class="preview-btn" data-preview-palette="mono" type="button">Try Mono</button></div>
+    </div>
+    <h3>Docs styles</h3>
+    <p>The three newer docs themes combine a layout with a default palette. Choose a style below, then pick another palette above if the subject calls for it.</p>
+    <div class="theme-grid">
+      <div class="theme-option"><strong>Minimal</strong><p>Sparse navigation and a content-first reading column. Defaults to Mono.</p><button class="preview-btn" data-preview-style="minimal" type="button">Try Minimal</button></div>
+      <div class="theme-option"><strong>Notebook</strong><p>Compact navigation and tighter reference components. Defaults to Slate.</p><button class="preview-btn" data-preview-style="notebook" type="button">Try Notebook</button></div>
+      <div class="theme-option"><strong>Glass</strong><p>Floating, lightly translucent navigation with an opaque article. Defaults to Slate.</p><button class="preview-btn" data-preview-style="glass" type="button">Try Glass</button></div>
+    </div>
+    <div class="codeblock"><header><span>prompt</span><button class="copy-btn">Copy</button></header>
+<pre>Build an API reference for our CLI, Notebook theme.
+Use the Forest palette instead of Notebook's Slate default.</pre></div>
+  </section>
+
   <section id="options">
     <h2><a class="anchor" href="#options">#</a>Options you can pass</h2>
     <p>None of these are flags; they're plain sentences in your prompt. Stated options always beat the skill's defaults.</p>
     <div class="table-wrap"><table>
       <thead><tr><th>Option</th><th>What you say</th><th>Default if silent</th></tr></thead>
       <tbody>
-        <tr><td>Site type</td><td>"a docs site for...", "a portfolio for..."</td><td>Skill asks, with 8 choices</td></tr>
-        <tr><td>Brand</td><td>Paste hex codes, fonts, logo</td><td>Skill picks a subject-specific palette</td></tr>
+        <tr><td>Page type</td><td>"a docs site for...", "a portfolio for..."</td><td>Skill asks, with 9 choices</td></tr>
+        <tr><td>Theme</td><td>"Notebook theme" or "Minimal theme" for docs</td><td>Skill asks; six color themes and three docs styles</td></tr>
+        <tr><td>Palette</td><td>"Use the Forest palette"</td><td>Docs style's paired palette</td></tr>
+        <tr><td>Brand</td><td>Paste hex codes, fonts, logo</td><td>Chosen theme supplies the palette</td></tr>
         <tr><td>File layout</td><td>"split files" or "separate pages"</td><td>One self-contained .html</td></tr>
         <tr><td>Starting theme</td><td>"default to dark"</td><td>Follows the visitor's system setting</td></tr>
         <tr><td>Copy</td><td>Paste real text, menus, prices</td><td>Skill writes specific, humanized copy</td></tr>
@@ -550,6 +775,7 @@ I shoot film photography, mostly around the Sunset district.</pre></div>
   <a href="#antigravity">Antigravity CLI</a>
   <a href="#opencode">OpenCode</a>
   <a href="#copilot">GitHub Copilot</a>
+  <a href="#themes">Themes</a>
   <a href="#options">Options</a>
   <a href="#debugging">Debugging</a>
 </aside>
@@ -557,6 +783,55 @@ I shoot film photography, mostly around the Sunset district.</pre></div>
 </div>
 
 <script>
+// Layout and palette choices remain independent of the light/dark setting.
+var docStyleSelect = document.getElementById('docStyle');
+var paletteSelect = document.getElementById('paletteSelect');
+docStyleSelect.value = document.documentElement.dataset.docStyle;
+paletteSelect.value = document.documentElement.dataset.paletteChoice;
+function applyDocsAppearance(style, paletteChoice) {
+  var root = document.documentElement;
+  root.dataset.docStyle = style;
+  root.dataset.paletteChoice = paletteChoice;
+  root.dataset.palette = paletteChoice === 'auto'
+    ? ({ classic: 'anthropic', minimal: 'mono', notebook: 'slate', glass: 'slate' })[style]
+    : paletteChoice;
+  docStyleSelect.value = style;
+  paletteSelect.value = paletteChoice;
+  document.querySelectorAll('[data-preview-palette]').forEach(function (button) {
+    button.setAttribute('aria-pressed', String(button.dataset.previewPalette === paletteChoice));
+  });
+  document.querySelectorAll('[data-preview-style]').forEach(function (button) {
+    button.setAttribute('aria-pressed', String(button.dataset.previewStyle === style));
+  });
+}
+function saveDocsAppearance() {
+  try {
+    localStorage.setItem('hh-doc-style', docStyleSelect.value);
+    localStorage.setItem('hh-palette', paletteSelect.value);
+  } catch (e) { /* storage blocked */ }
+}
+applyDocsAppearance(docStyleSelect.value, paletteSelect.value);
+docStyleSelect.addEventListener('change', function () {
+  applyDocsAppearance(docStyleSelect.value, paletteSelect.value);
+  saveDocsAppearance();
+});
+paletteSelect.addEventListener('change', function () {
+  applyDocsAppearance(docStyleSelect.value, paletteSelect.value);
+  saveDocsAppearance();
+});
+document.querySelectorAll('[data-preview-palette]').forEach(function (button) {
+  button.addEventListener('click', function () {
+    applyDocsAppearance(docStyleSelect.value, button.dataset.previewPalette);
+    saveDocsAppearance();
+  });
+});
+document.querySelectorAll('[data-preview-style]').forEach(function (button) {
+  button.addEventListener('click', function () {
+    applyDocsAppearance(button.dataset.previewStyle, 'auto');
+    saveDocsAppearance();
+  });
+});
+
 // Theme toggle: user's click overrides the system preference.
 document.getElementById('themeToggle').addEventListener('click', function () {
   var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';

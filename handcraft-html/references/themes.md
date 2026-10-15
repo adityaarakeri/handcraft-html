@@ -1,8 +1,8 @@
-# Named themes
+# Named color themes
 
-Six presets. Every value below is contrast-tested: body text and link text clear 4.5:1 against their background in both light and dark. Use them verbatim. Do not "improve" a preset mid-build, and do not blend two of them.
+Six color presets. Every value below is contrast-tested: body text and link text clear 4.5:1 against their background in both light and dark. Use them verbatim. Do not "improve" a preset mid-build, and do not blend two of them. The Minimal, Notebook, and Glass docs style themes in `docs-style.md` reuse these palettes and add layout guidance.
 
-**Always offer the choice.** Present the six by name and one-line character before building, unless the user already named a theme or supplied their own brand colors. If they supply brand colors, those win and no preset is used.
+**Always offer the choice.** Present the six color themes by name and one-line character; for documentation pages also offer Minimal, Notebook, and Glass as named choices. Skip this when the user already named a theme or supplied their own brand colors. Brand colors override the preset palette while a named docs style still controls layout.
 
 **Never invent a palette when a preset fits.** Freehand palettes are how pages drift into the accidental green or navy cast. Only go custom when the user asks for something none of these cover, and when you do, say the palette out loud in one line first (see SKILL.md Step 3).
 
